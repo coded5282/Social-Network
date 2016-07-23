@@ -3,8 +3,13 @@ import {SignupComponent} from "./signup.component";
 @Component({
     selector: 'my-auth',
     template: `
-        <h1>Auth</h1>
-        <my-signup></my-signup>
+        <header class="row spacing">
+            <nav class="col-md-8 col-md-offset-2">
+                <ul class="nav nav-tabs">
+                
+                </ul> 
+            </nav>
+        </header> 
     `,
     directives: [SignupComponent]
 })
