@@ -13,8 +13,8 @@ import {MessageService} from "./message.service";
                     {{ message.username }} 
                 </div>
                 <div class="config">
-                    <a href="#" (click)="onClick()">Edit</a>
-                    <a href="#">Delete</a>
+                    <a href="#" (click)="onEdit()">Edit</a>
+                    <a href="#" (click)="onDelete()">Delete</a>
                 </div>
             </footer>
         </article>
@@ -38,9 +38,13 @@ export class MessageComponent {
     @Input() message:Message;
     @Output() editClicked = new EventEmitter<string>(); 
   
-    constructor (private _messageSservice: MessageService) {}
+    constructor (private _messageService: MessageService) {}
     
-    onClick() {
-        this.editClicked.emit('Changed'); 
+    onEdit() {
+        this._messageService.editMessage(this.message);
+    }
+    
+    onDelete() {
+        this._messageService.deleteMessage(this.message); 
     }
 }
