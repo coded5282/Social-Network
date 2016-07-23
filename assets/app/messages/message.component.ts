@@ -1,5 +1,6 @@
 import {Component, Input, Output, EventEmitter} from "angular2/core"; 
 import {Message} from "./message"; 
+import {MessageService} from "./message.service"; 
 @Component({
     selector: 'my-message',
     template: `
@@ -37,6 +38,7 @@ export class MessageComponent {
     @Input() message:Message;
     @Output() editClicked = new EventEmitter<string>(); 
   
+    constructor (private _messageSservice: MessageService) {}
     
     onClick() {
         this.editClicked.emit('Changed'); 
