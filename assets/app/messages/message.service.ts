@@ -1,14 +1,38 @@
 import {Message} from "./message"; 
+import {Http, Headers} from "angular2/http"; 
+import {Injectable} from "angular2/core"; 
+import 'rxjs/Rx'; 
+import {Observable} from "rxjs/Observable"; 
+@Injectable()
 export class MessageService {
     messages: Message[] = [];
     
+    constructor (private _http: Http) {}
+    
     addMessage(message: Message) {
-        this.messages.push(message); 
-        console.log(this.messages); 
+        const body = JSON.stringify(message); 
+        const headers = new Headers({'Content-Type': 'application/json'});
+        return this._http.post('https://webdevmean-coded5282.c9users.io/message', body, {headers: headers})
+            .map(response => {
+                const data = response.json().obj;
+                let message = new Message(data.content, data._id, 'Dummy', null);
+                return message; 
+            })
+            .catch(error => Observable.throw(error.json())); 
     }
     
     getMessages() {
-        return this.messages; 
+        return this._http.get('https://webdevmean-coded5282.c9users.io/message')
+            .map(response => {
+                const data = response.json().obj;
+                let objs: any[] = [];
+                for (let i = 0; i < data.length; i++) {
+                    let message = new Message(data[i].content, data[i]._id, 'Dummy', null);
+                    objs.push(message);
+                };
+                return objs; 
+            })
+            .catch(error => Observable.throw(error.json()));
     }
     
     editMessage(message: Message) {
