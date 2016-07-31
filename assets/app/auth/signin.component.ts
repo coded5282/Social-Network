@@ -1,5 +1,9 @@
 import {Component, OnInit} from "angular2/core";
 import {ControlGroup, FormBuilder, Validators, Control} from "angular2/common"; 
+import {User} from "./user"; 
+import {AuthService} from "./auth.service.ts"; 
+import {Router} from "angular2/router"; 
+import {ErrorService} from "../errors/error.service"; 
 @Component({
     selector: 'my-signin',
     template: `
@@ -22,10 +26,19 @@ import {ControlGroup, FormBuilder, Validators, Control} from "angular2/common";
 export class SigninComponent implements OnInit {
     myForm: ControlGroup; 
     
-    constructor(private _fb:FormBuilder) {}
+    constructor(private _fb:FormBuilder, private _authService: AuthService, private _router: Router, private _errorService: ErrorService) {}
     
     onSubmit() {
-        console.log(this.myForm.value); 
+        const user =  new User(this.myForm.value.email, this.myForm.value.password);
+        this._authService.signin(user)
+            .subscribe(
+                data => {
+                    localStorage.setItem('token', data.obj);
+                    localStorage.setItem('userId', data.userId); 
+                    this._router.navigateByUrl('/'); 
+                },    
+                error => this._errorService.handleError(error) 
+            );
     }
     
     ngOnInit() {
